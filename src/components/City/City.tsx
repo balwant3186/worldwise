@@ -2,7 +2,7 @@ import classes from "./City.module.css";
 
 import React from "react";
 
-const formatDate = (date: string | null) =>
+export const formatDate = (date: string | null) =>
   new Intl.DateTimeFormat("en", {
     day: "numeric",
     month: "long",

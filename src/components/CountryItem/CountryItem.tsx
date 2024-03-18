@@ -2,11 +2,12 @@ import classes from "./CountryItem.module.css";
 
 import React from "react";
 
+export type CountryType = {
+  emoji: string;
+  country: string;
+};
 type CountryItemProps = {
-  country: {
-    emoji: string;
-    country: string;
-  };
+  country: CountryType;
 };
 
 const CountryItem: React.FC<CountryItemProps> = ({ country }) => {

@@ -1,5 +1,8 @@
 import React from "react";
-import AppNav from "../../components/AppNav/AppNav";
+import Sidebar from "../../components/Sidebar/Sidebar";
+
+import classes from "./AppLayout.module.scss";
+import Map from "../../components/Map/Map";
 
 type AppLayoutProps = {
   children?: React.ReactNode;
@@ -7,9 +10,9 @@ type AppLayoutProps = {
 
 const AppLayout: React.FC<AppLayoutProps> = () => {
   return (
-    <div>
-      <AppNav />
-      <p>App</p>
+    <div className={classes.app}>
+      <Sidebar />
+      <Map />
     </div>
   );
 };
