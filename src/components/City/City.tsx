@@ -1,3 +1,4 @@
+import { useParams } from "react-router-dom";
 import classes from "./City.module.css";
 
 import React from "react";
@@ -21,6 +22,8 @@ const City: React.FC<CityProps> = () => {
     date: "2027-10-31T15:59:59.138Z",
     notes: "My favorite city so far!",
   };
+
+  const { id } = useParams();
 
   const { cityName, emoji, date, notes } = currentCity;
 
