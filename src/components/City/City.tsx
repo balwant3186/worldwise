@@ -1,9 +1,12 @@
 import { useParams } from "react-router-dom";
 import classes from "./City.module.css";
 
-import React from "react";
+import React, { useEffect } from "react";
+import { useCities } from "../../contexts/CitiesContext";
+import Spinner from "../Spinner/Spinner";
+import BackButton from "../BackButton/BackButton";
 
-export const formatDate = (date: string | null) =>
+export const formatDate = (date: string) =>
   new Intl.DateTimeFormat("en", {
     day: "numeric",
     month: "long",
@@ -16,16 +19,17 @@ type CityProps = {
 };
 
 const City: React.FC<CityProps> = () => {
-  const currentCity = {
-    cityName: "Lisbon",
-    emoji: "🇵🇹",
-    date: "2027-10-31T15:59:59.138Z",
-    notes: "My favorite city so far!",
-  };
-
   const { id } = useParams();
 
-  const { cityName, emoji, date, notes } = currentCity;
+  const { currentCityDetails, fetchCityDetails, isLoading } = useCities();
+
+  const { cityName, emoji, date, notes } = currentCityDetails;
+
+  useEffect(() => {
+    fetchCityDetails(id ? +id : 0);
+  }, [id]);
+
+  if (isLoading) return <Spinner />;
 
   return (
     <div className={classes.city}>
@@ -38,7 +42,7 @@ const City: React.FC<CityProps> = () => {
 
       <div className={classes.row}>
         <h6>You went to {cityName} on</h6>
-        <p>{formatDate(date || null)}</p>
+        {date && <p>{formatDate(date || "")}</p>}
       </div>
 
       {notes && (
@@ -59,7 +63,9 @@ const City: React.FC<CityProps> = () => {
         </a>
       </div>
 
-      <div>{/* <ButtonBack /> */}</div>
+      <div>
+        <BackButton />
+      </div>
     </div>
   );
 };

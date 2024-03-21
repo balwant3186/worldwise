@@ -1,11 +1,11 @@
-import React, { FormEvent, MouseEventHandler } from "react";
+import React, { MouseEvent } from "react";
 
 import classes from "./Button.module.css";
 
 type ButtonProps = {
   children: React.ReactNode;
   type: string;
-  onClick: (e) => void;
+  onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
 };
 
 const Button: React.FC<ButtonProps> = ({ type, children, onClick }) => {

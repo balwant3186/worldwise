@@ -4,6 +4,7 @@ import classes from "./CityList.module.css";
 import Spinner from "../Spinner/Spinner";
 import CityItem from "../CityItem/CityItem";
 import Message from "../Message/Message";
+import { useCities } from "../../contexts/CitiesContext";
 
 export type CityType = {
   cityName: string;
@@ -15,16 +16,16 @@ export type CityType = {
     lat: number;
     lng: number;
   };
-  id: number;
+  id?: number;
 };
 
 type CityListProps = {
   children?: React.ReactNode;
-  isLoading: boolean;
-  cities: CityType[];
 };
 
-const CityList: React.FC<CityListProps> = ({ isLoading, cities }) => {
+const CityList: React.FC<CityListProps> = () => {
+  const { cities, isLoading } = useCities();
+
   if (isLoading) return <Spinner />;
 
   if (!cities.length)
