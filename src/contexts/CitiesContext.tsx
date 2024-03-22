@@ -96,7 +96,7 @@ const reducer = (state: StateType, action: Action): StateType => {
       };
 
     default:
-      throw new Error("Unhandled action type: ");
+      throw new Error("Unknown action type");
   }
 };
 
