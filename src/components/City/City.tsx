@@ -26,8 +26,8 @@ const City: React.FC<CityProps> = () => {
   const { cityName, emoji, date, notes } = currentCityDetails;
 
   useEffect(() => {
-    fetchCityDetails(id ? +id : 0);
-  }, [id]);
+    fetchCityDetails(id || "");
+  }, [id, fetchCityDetails]);
 
   if (isLoading) return <Spinner />;
 

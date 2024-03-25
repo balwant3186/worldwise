@@ -1,14 +1,21 @@
-import { FC, createContext, useContext, useEffect, useReducer } from "react";
+import {
+  FC,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useReducer,
+} from "react";
 import { CityType } from "../components/CityList/CityList";
 import { BASE_URL } from "../constants/constant";
 
 type ContextType = {
   cities: CityType[];
   isLoading: boolean;
-  fetchCityDetails: (id: number) => Promise<void>;
+  fetchCityDetails: (id: string) => Promise<void>;
   currentCityDetails: CityType;
   addCity: (city: CityType) => Promise<void>;
-  deleteCity: (id: number) => Promise<void>;
+  deleteCity: (id: string) => Promise<void>;
 };
 
 const initialCityState = {
@@ -17,7 +24,7 @@ const initialCityState = {
   date: "",
   notes: "",
   position: { lat: 0, lng: 0 },
-  id: 0,
+  id: "",
   country: "",
 };
 
@@ -49,16 +56,16 @@ const initialState = {
 };
 
 type Action =
-  | { type: "loaded" }
+  | { type: "loading" }
   | { type: "cities/loaded"; payload: CityType[] }
   | { type: "city/loaded"; payload: CityType }
   | { type: "city/created"; payload: CityType }
-  | { type: "city/deleted"; payload: number }
+  | { type: "city/deleted"; payload: string }
   | { type: "rejected"; payload: string };
 
 const reducer = (state: StateType, action: Action): StateType => {
   switch (action.type) {
-    case "loaded":
+    case "loading":
       return {
         ...state,
         isLoading: true,
@@ -72,7 +79,7 @@ const reducer = (state: StateType, action: Action): StateType => {
     case "city/loaded":
       return {
         ...state,
-        currentCityDetails: action.payload || {},
+        currentCityDetails: action.payload,
         isLoading: false,
       };
     case "city/created":
@@ -85,7 +92,7 @@ const reducer = (state: StateType, action: Action): StateType => {
     case "city/deleted":
       return {
         ...state,
-        cities: state.cities.filter((city) => city.id !== action.payload),
+        cities: state.cities.filter((city) => city.id !== action.payload || ""),
         isLoading: false,
         currentCityDetails: initialCityState,
       };
@@ -109,7 +116,7 @@ export const CitiesProvider: FC<CitiesProviderType> = ({ children }) => {
   useEffect(() => {
     const fetchCities = async () => {
       try {
-        dispatch({ type: "loaded" });
+        dispatch({ type: "loading" });
         const res = await fetch(`${BASE_URL}/cities`);
         const data = await res.json();
         dispatch({ type: "cities/loaded", payload: data });
@@ -124,9 +131,9 @@ export const CitiesProvider: FC<CitiesProviderType> = ({ children }) => {
     fetchCities();
   }, []);
 
-  const fetchCityDetails = async (id: number) => {
+  const fetchCityDetails = useCallback(async (id: string) => {
     try {
-      dispatch({ type: "loaded" });
+      dispatch({ type: "loading" });
       const res = await fetch(`${BASE_URL}/cities/${id}`);
       const data = await res.json();
       dispatch({ type: "city/loaded", payload: data });
@@ -136,11 +143,11 @@ export const CitiesProvider: FC<CitiesProviderType> = ({ children }) => {
         payload: "There was an error loading data...",
       });
     }
-  };
+  }, []);
 
   const addCity = async (city: CityType) => {
     try {
-      dispatch({ type: "loaded" });
+      dispatch({ type: "loading" });
       const res = await fetch(`${BASE_URL}/cities/`, {
         method: "POST",
         body: JSON.stringify(city),
@@ -159,9 +166,9 @@ export const CitiesProvider: FC<CitiesProviderType> = ({ children }) => {
     }
   };
 
-  const deleteCity = async (id: number) => {
+  const deleteCity = async (id: string) => {
     try {
-      dispatch({ type: "loaded" });
+      dispatch({ type: "loading" });
       await fetch(`${BASE_URL}/cities/${id}`, {
         method: "DELETE",
       });

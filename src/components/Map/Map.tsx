@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import classes from "./Map.module.css";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   MapContainer,
   Marker,
@@ -51,15 +51,12 @@ const Map: React.FC<MapProps> = () => {
         </Button>
       )}
       <MapContainer
-        center={mapPosition}
-        zoom={6}
-        scrollWheelZoom={true}
+        // center={mapPosition}
+        // zoom={6}
+        // scrollWheelZoom={true}
         className={classes.map}
       >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
-        />
+        <TileLayer url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png" />
 
         {cities.map((city) => (
           <Marker
@@ -95,7 +92,8 @@ const ChangeCenter: React.FC<ChangeCenterType> = ({ position, zoom }) => {
 const DetectClick = () => {
   const navigate = useNavigate();
   useMapEvents({
-    click: (e) => navigate(`form?lat=${e.latlng.lat}&lng=${e.latlng.lng}`),
+    click: (e: { latlng: { lat: number; lng: number } }) =>
+      navigate(`form?lat=${e.latlng.lat}&lng=${e.latlng.lng}`),
   });
 
   return null;
